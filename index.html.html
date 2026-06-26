@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>✨ KHẢO BÀI TỪ VỰNG ✨</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:linear-gradient(135deg,#ffe6f0,#e0f7fa);
+  margin:0;padding:0;
+}
+
+.container{
+  max-width:900px;
+  margin:30px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+h1{
+  text-align:center;
+  color:#ff4da6;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+#username{
+  padding:10px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  width:60%;
+  text-align:center;
+}
+
+#timer{
+  text-align:center;
+  font-size:18px;
+  margin:10px;
+}
+
+.question{
+  background:#f9f9f9;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:12px;
+}
+
+.unanswered{
+  border:2px solid red;
+  background:#fff0f0;
+}
+
+.answers label{
+  display:block;
+  margin:5px 0;
+  cursor:pointer;
+}
+
+button{
+  display:block;
+  margin:20px auto;
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  background:#ff4da6;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#result{
+  margin-top:20px;
+}
+
+#leaderboard{
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body oncontextmenu="return false;">
+
+<div class="container">
+
+<h1>✨ KHẢO BÀI TỪ VỰNG UNIT 1 ✨</h1>
+
+<div class="header">
+<input id="username" placeholder="Nhập tên của bạn...">
+</div>
+
+<div id="timer">⏳ 15:00</div>
+
+<div id="quiz"></div>
+
+<button onclick="submitQuiz()">Nộp bài</button>
+
+<div id="result"></div>
+
+<h3>🏆 Bảng xếp hạng</h3>
+<div id="leaderboard"></div>
+
+</div>
+
+<script>
+let tabSwitchCount = 0; 
+
+document.addEventListener("visibilitychange", function() {
+  if (document.hidden) {
+    tabSwitchCount++;
+
+    alert("⚠️ Bạn đã rời tab (" + tabSwitchCount + " lần)");
+
+    if(tabSwitchCount >= 3){
+      alert("❌ Bạn rời tab quá nhiều!");
+      submitQuiz();
+    }
+  }
+});
+
+// 🔀 random
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+// 📚 DATA
+let originalQuestions = [ 
+ {
+    q: "Charles Darwin was a famous ______ who developed the theory of evolution.",
+    a: ["biology", "biologist", "biological", "biologically"],
+    c: 1
+  },
+  {
+    q: 'The word "adopt" in "The company adopted a new policy" is closest in meaning to ______.',
+    a: ["reject", "apply", "remove", "ignore"],
+    c: 1
+  },
+  {
+    q: 'Which word means "nhận nuôi"?',
+    a: ["adopt", "diagnose", "access", "create"],
+    c: 0
+  },
+  {
+    q: "Many young people rely on ______ devices to communicate.",
+    a: ["electric", "electrical", "electronic", "electrifying"],
+    c: 2
+  },
+  {
+    q: "There is an ______ fault in the machine.",
+    a: ["electric", "electrical", "electronic", "electricity"],
+    c: 1
+  },
+  {
+    q: 'The opposite of "accessible" is ______.',
+    a: ["available", "reachable", "convenient", "inaccessible"],
+    c: 3
+  },
+  {
+    q: 'The word "attendance" means ______.',
+    a: ["sự chú ý", "sự tham dự", "người tham dự", "người phục vụ"],
+    c: 1
+  },
+  {
+    q: "More than 500 ______ attended the conference.",
+    a: ["attendance", "attendants", "attendees", "attentions"],
+    c: 2
+  },
+  {
+    q: 'Choose the word closest in meaning to "succeed".',
+    a: ["fail", "manage", "refuse", "avoid"],
+    c: 1
+  },
+  {
+    q: "She finally succeeded ______ getting a scholarship.",
+    a: ["at", "on", "in", "with"],
+    c: 2
+  },
+  {
+    q: "Thomas Edison was a great ______.",
+    a: ["invention", "inventor", "inventive", "invent"],
+    c: 1
+  },
+  {
+    q: 'The word "invention" means ______.',
+    a: ["nhà phát minh", "sự sáng tạo", "phát minh", "khám phá"],
+    c: 2
+  },
+  {
+    q: "The company is developing a new ______.",
+    a: ["produce", "production", "productive", "product"],
+    c: 3
+  },
+  {
+    q: "Which sentence is CORRECT?",
+    a: [
+      "She contributed money with charity.",
+      "She contributed money to charity.",
+      "She contributed money for charity to.",
+      "She contributed money at charity."
+    ],
+    c: 1
+  },
+  {
+    q: 'The word "contribution" is closest in meaning to ______.',
+    a: ["influence", "support", "donation", "benefit"],
+    c: 2
+  },
+  {
+    q: "Doctors quickly ______ the disease.",
+    a: ["adopted", "diagnosed", "related", "visualized"],
+    c: 1
+  },
+  {
+    q: "Early ______ can save many lives.",
+    a: ["diagnose", "diagnostic", "diagnosis", "diagnosing"],
+    c: 2
+  },
+  {
+    q: 'The word "visionary" refers to someone who ______.',
+    a: [
+      "lacks ideas",
+      "has creative ideas about the future",
+      "cannot see clearly",
+      "studies science"
+    ],
+    c: 1
+  },
+  {
+    q: "Einstein is considered a mathematical ______.",
+    a: ["genius", "creator", "inventor", "scientist"],
+    c: 0
+  },
+  {
+    q: "She found an ______ solution to the problem.",
+    a: ["ingenious", "genius", "ingenuity", "inventive"],
+    c: 0
+  },
+  {
+    q: 'The word "creativity" means ______.',
+    a: [
+      "khả năng lãnh đạo",
+      "sự tự tin",
+      "sự sáng tạo",
+      "sự thành công"
+    ],
+    c: 2
+  },
+  {
+    q: "The relationship ______ parents and children is important.",
+    a: ["among", "between", "of", "with"],
+    c: 1
+  },
+  {
+    q: "The essay contained a lot of ______ information.",
+    a: ["related", "relative", "relevant", "irrelevant"],
+    c: 3
+  },
+  {
+    q: 'Choose the Vietnamese meaning of "productive".',
+    a: [
+      "Có năng suất",
+      "Có tính sáng tạo",
+      "Có trách nhiệm",
+      "Có ảnh hưởng"
+    ],
+    c: 0
+  },
+  {
+    q: 'Which word means "hoạt hình"?',
+    a: ["animate", "animator", "animation", "animated"],
+    c: 2
+  },
+  {
+    q: "The stars are clearly ______ tonight.",
+    a: ["visionary", "visible", "visual", "invisible"],
+    c: 1
+  },
+  {
+    q: '"Nhà sáng tạo nội dung" can be translated as ______.',
+    a: [
+      "content creation",
+      "content creator",
+      "creative content",
+      "creator content"
+    ],
+    c: 1
+  },
+  {
+    q: 'The opposite of "successful" is ______.',
+    a: ["successive", "productive", "unsuccessful", "inaccessible"],
+    c: 2
+  },
+  {
+    q: 'Choose the correct meaning of "successive".',
+    a: ["thành công", "liên tiếp", "có năng suất", "kế nhiệm"],
+    c: 1
+  },
+  {
+    q: 'Which sentence uses "access" correctly?',
+    a: [
+      "I can access to the Internet.",
+      "I can access the Internet.",
+      "I can access on the Internet.",
+      "I can access with the Internet."
+    ],
+    c: 1
+  }
+];
+
+// 🔀 RANDOM CÂU + ĐÁP ÁN
+let questions = shuffle(originalQuestions.map(q=>{
+  let opts = q.a.map((t,i)=>({t,correct:i===q.c}));
+  opts = shuffle(opts);
+  return {
+    q:q.q,
+    a:opts.map(o=>o.t),
+    c:opts.findIndex(o=>o.correct)
+  };
+}));
+
+// render
+const quizDiv=document.getElementById("quiz");
+
+questions.forEach((q,i)=>{
+  let div=document.createElement("div");
+  div.className="question";
+
+  let html=`<b>${i+1}. ${q.q}</b>`;
+
+  q.a.forEach((ans,idx)=>{
+    html+=`
+    <div class="answers">
+      <label>
+        <input type="radio" name="q${i}" value="${idx}">
+        ${String.fromCharCode(65+idx)}. ${ans}
+      </label>
+    </div>`;
+  });
+
+  div.innerHTML=html;
+  quizDiv.appendChild(div);
+});
+
+// ⏱ timer
+let time=900;
+let timer=setInterval(()=>{
+  let m=Math.floor(time/60);
+  let s=time%60;
+  document.getElementById("timer").innerText=`⏳ ${m}:${s<10?"0"+s:s}`;
+  time--;
+  if(time<0){clearInterval(timer);submitQuiz();}
+},1000);
+
+// submit
+function submitQuiz(){
+  let name=document.getElementById("username").value.trim();
+  if(!name){alert("Nhập tên!");return;}
+let hasEmpty = false;
+
+// kiểm tra câu chưa làm
+questions.forEach((q,i)=>{
+  let selected=document.querySelector(`input[name=q${i}]:checked`);
+  let div=document.getElementsByClassName("question")[i];
+
+  div.classList.remove("unanswered");
+
+  if(!selected){
+    div.classList.add("unanswered");
+    hasEmpty = true;
+  }
+});
+
+if(hasEmpty){
+  alert("❌ Bạn phải làm hết câu trước khi nộp!");
+  return;
+}
+  clearInterval(timer);
+
+  let score=0;
+  let wrongList=[];
+
+  questions.forEach((q,i)=>{
+    let selected=document.querySelector(`input[name=q${i}]:checked`);
+    if(!selected)return;
+
+    let val=parseInt(selected.value);
+
+    if(val===q.c){
+      score++;
+    } else {
+      wrongList.push({
+        question:q.q,
+        your:String.fromCharCode(65+val)+". "+q.a[val],
+        correct:String.fromCharCode(65+q.c)+". "+q.a[q.c]
+      });
+    }
+  });
+
+  // ⭐ TIME
+  let now = new Date().toLocaleString();
+
+  // hiển thị
+  document.getElementById("result").innerHTML =
+    `🎉 ${name} đúng ${score}/${questions.length}<br>
+     ⏰ ${now}<br>
+     ⚠️ TabSwitch: ${tabSwitchCount || 0}`;
+
+  // ⭐ GỬI DATA FULL
+  fetch("https://script.google.com/macros/s/AKfycbwKGHpjJy1RxNpGRIHdZtQiPfCrh0OSG24DEzQtRB7Ezlr1aki97aZL0JfQiSwkKmYmrg/exec",{
+    method:"POST",
+    body:JSON.stringify({
+      time: now,
+      name: name,
+      score: score,
+      total: questions.length,
+      tabSwitch: tabSwitchCount || 0,
+      wrong: wrongList.map((w,i)=>
+        (i+1)+". "+w.question+
+        " | Bạn chọn: "+w.your+
+        " | Đúng: "+w.correct
+      ).join("\n")
+    })
+  });
+}
+
+</script>
+
+</body>
+</html>
