@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>✨ KHẢO BÀI TỪ VỰNG ✨</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:linear-gradient(135deg,#ffe6f0,#e0f7fa);
+  margin:0;padding:0;
+}
+
+.container{
+  max-width:900px;
+  margin:30px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+h1{
+  text-align:center;
+  color:#ff4da6;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+#username{
+  padding:10px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  width:60%;
+  text-align:center;
+}
+
+#timer{
+  text-align:center;
+  font-size:18px;
+  margin:10px;
+}
+
+.question{
+  background:#f9f9f9;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:12px;
+}
+
+.unanswered{
+  border:2px solid red;
+  background:#fff0f0;
+}
+
+.answers label{
+  display:block;
+  margin:5px 0;
+  cursor:pointer;
+}
+
+button{
+  display:block;
+  margin:20px auto;
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  background:#ff4da6;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#result{
+  margin-top:20px;
+}
+
+#leaderboard{
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body oncontextmenu="return false;">
+
+<div class="container">
+
+<h1>✨ KHẢO BÀI TỪ VỰNG TOEIC ✨</h1>
+
+<div class="header">
+<input id="username" placeholder="Nhập tên của bạn...">
+</div>
+
+<div id="timer">⏳ 15:00</div>
+
+<div id="quiz"></div>
+
+<button onclick="submitQuiz()">Nộp bài</button>
+
+<div id="result"></div>
+
+<h3>🏆 Bảng xếp hạng</h3>
+<div id="leaderboard"></div>
+
+</div>
+
+<script>
+let tabSwitchCount = 0; 
+
+document.addEventListener("visibilitychange", function() {
+  if (document.hidden) {
+    tabSwitchCount++;
+
+    alert("⚠️ Bạn đã rời tab (" + tabSwitchCount + " lần)");
+
+    if(tabSwitchCount >= 3){
+      alert("❌ Bạn rời tab quá nhiều!");
+      submitQuiz();
+    }
+  }
+});
+
+// 🔀 random
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+// 📚 DATA
+let originalQuestions = [ 
+{
+  q: "I’m afraid Mr. Lee is in a meeting right now. Would you like him to ______ when he is free?",
+  a: ["return the call", "chair the meeting", "place an ad", "meet the goal"],
+  c: 0
+},
+{
+  q: "The manager has prepared a ______ for the new marketing campaign, but it still needs some revisions.",
+  a: ["warranty", "agenda", "draft plan", "sales figure"],
+  c: 2
+},
+{
+  q: "Our company received several ______ from customers on how to improve our service.",
+  a: ["recommendations", "supplies", "warranties", "deadlines"],
+  c: 0
+},
+{
+  q: "Could you ______ these documents before I email them to the client?",
+  a: ["reserve", "proofread", "update", "finance"],
+  c: 1
+},
+{
+  q: "The hotel is ______ this weekend because an international conference is being held there.",
+  a: ["vacant", "available", "fully booked", "renovated"],
+  c: 2
+},
+{
+  q: "I can't have lunch with you today because I ______ with another client.",
+  a: ["have a previous appointment", "meet the deadline", "take the insurance", "return the call"],
+  c: 0
+},
+{
+  q: "The company decided to ______ by three more days because many applicants requested extra time.",
+  a: ["meet the deadline", "extend the deadline", "submit separately", "update the schedule"],
+  c: 1
+},
+{
+  q: "The factory has ordered more office ______, including paper and printer ink.",
+  a: ["agendas", "recommendations", "supplies", "warranties"],
+  c: 2
+},
+{
+  q: "The sales team worked hard and finally managed to ______ for this quarter.",
+  a: ["place an ad", "start the camcorder", "meet the goal", "reserve a room"],
+  c: 2
+},
+{
+  q: "This laptop comes with a three-year ______ that covers manufacturing defects.",
+  a: ["warranty", "agenda", "recommendation", "interest"],
+  c: 0
+},
+{
+  q: "My parents will ______ tomorrow because they are flying to Singapore.",
+  a: ["take me to the airport", "take a bus to work", "place an ad", "star in the movie"],
+  c: 0
+},
+{
+  q: "The bank approved his request to ______ and buy a new house.",
+  a: ["return the call", "get a loan from the bank", "improve sales figures", "reserve a room"],
+  c: 1
+},
+{
+  q: "The company had to pay high ______ because it failed to repay the money on time.",
+  a: ["sales figures", "supplies", "interests", "warranties"],
+  c: 2
+},
+{
+  q: "A famous ______ was hired to transport the products overseas.",
+  a: ["cafeteria", "shipping company", "vice president", "award ceremony"],
+  c: 1
+},
+{
+  q: "The new ______ will officially begin work next Monday.",
+  a: ["sales figures", "staff recruitment", "agenda", "finance statement"],
+  c: 1
+},
+{
+  q: "The manager asked his assistant to ______ after the meeting so everyone could see the latest information.",
+  a: ["update the report", "star in the movie", "make an overseas call", "take a bus to work"],
+  c: 0
+},
+{
+  q: "The company hopes to ______ by launching several new products this year.",
+  a: ["improve sales figures", "reserve a room", "pay interests", "submit separately"],
+  c: 0
+},
+{
+  q: "That building is considered ______ because it is located in the city center.",
+  a: ["a previous appointment", "prime real estate", "a finance statement", "a draft plan"],
+  c: 1
+},
+{
+  q: "The famous actor will ______ that is scheduled to be released next summer.",
+  a: ["chair the meeting", "document the meeting", "star in the movie", "place an ad"],
+  c: 2
+},
+{
+  q: "Please ______ so that we can record the wedding ceremony.",
+  a: ["meet the deadline", "start the camcorder", "pay interests", "reserve a room"],
+  c: 1
+},
+{
+  q: "The first item on today's ______ is the discussion of next year's budget.",
+  a: ["agenda", "warranty", "recommendation", "supply"],
+  c: 0
+},
+{
+  q: "I won't be free ______ because I have to finish this report.",
+  a: ["not until this weekend", "in an hour", "by tomorrow morning", "last at least two weeks"],
+  c: 0
+},
+{
+  q: "Look at all those old photographs on the wall. He ______ for a very long time.",
+  a: ["must have lived here", "should call back", "would like me to reserve a room", "has an overseas call"],
+  c: 0
+},
+{
+  q: "The accountant is preparing the annual ______ for the board meeting.",
+  a: ["agenda", "finance statement", "recommendation", "supply"],
+  c: 1
+},
+{
+  q: "Since the director was absent, the vice director had to ______.",
+  a: ["improve sales figures", "chair the meeting", "place an ad", "reserve a room"],
+  c: 1
+},
+{
+  q: "Everyone dressed formally to attend the company's ______.",
+  a: ["award ceremony", "shipping company", "cafeteria", "finance statement"],
+  c: 0
+},
+{
+  q: "\"______ reserve a room for you at the Hilton Hotel?\" asked the secretary.",
+  a: ["Would you care to", "Would you like me to", "Do you mind", "Could you"],
+  c: 1
+},
+{
+  q: "The manager promised to ______ as soon as he finished talking with another customer.",
+  a: ["return the call", "pay interests", "take the insurance", "submit separately"],
+  c: 0
+},
+{
+  q: "The secretary was asked to ______ so that absent employees could know what had been discussed.",
+  a: ["document the meeting", "meet the goal", "improve sales figures", "place an ad"],
+  c: 0
+},
+{
+  q: "Many employees eat lunch in the company's ______ because it serves inexpensive meals.",
+  a: ["shipping company", "cafeteria", "prime real estate", "warranty"],
+  c: 1
+}
+];
+
+
+// 🔀 RANDOM CÂU + ĐÁP ÁN
+let questions = shuffle(originalQuestions.map(q=>{
+  let opts = q.a.map((t,i)=>({t,correct:i===q.c}));
+  opts = shuffle(opts);
+  return {
+    q:q.q,
+    a:opts.map(o=>o.t),
+    c:opts.findIndex(o=>o.correct)
+  };
+}));
+
+// render
+const quizDiv=document.getElementById("quiz");
+
+questions.forEach((q,i)=>{
+  let div=document.createElement("div");
+  div.className="question";
+
+  let html=`<b>${i+1}. ${q.q}</b>`;
+
+  q.a.forEach((ans,idx)=>{
+    html+=`
+    <div class="answers">
+      <label>
+        <input type="radio" name="q${i}" value="${idx}">
+        ${String.fromCharCode(65+idx)}. ${ans}
+      </label>
+    </div>`;
+  });
+
+  div.innerHTML=html;
+  quizDiv.appendChild(div);
+});
+
+// ⏱ timer
+let time=900;
+let timer=setInterval(()=>{
+  let m=Math.floor(time/60);
+  let s=time%60;
+  document.getElementById("timer").innerText=`⏳ ${m}:${s<10?"0"+s:s}`;
+  time--;
+  if(time<0){clearInterval(timer);submitQuiz();}
+},1000);
+
+// submit
+function submitQuiz(){
+  let name=document.getElementById("username").value.trim();
+  if(!name){alert("Nhập tên!");return;}
+let hasEmpty = false;
+
+// kiểm tra câu chưa làm
+questions.forEach((q,i)=>{
+  let selected=document.querySelector(`input[name=q${i}]:checked`);
+  let div=document.getElementsByClassName("question")[i];
+
+  div.classList.remove("unanswered");
+
+  if(!selected){
+    div.classList.add("unanswered");
+    hasEmpty = true;
+  }
+});
+
+if(hasEmpty){
+  alert("❌ Bạn phải làm hết câu trước khi nộp!");
+  return;
+}
+  clearInterval(timer);
+
+  let score=0;
+  let wrongList=[];
+
+  questions.forEach((q,i)=>{
+    let selected=document.querySelector(`input[name=q${i}]:checked`);
+    if(!selected)return;
+
+    let val=parseInt(selected.value);
+
+    if(val===q.c){
+      score++;
+    } else {
+      wrongList.push({
+        question:q.q,
+        your:String.fromCharCode(65+val)+". "+q.a[val],
+        correct:String.fromCharCode(65+q.c)+". "+q.a[q.c]
+      });
+    }
+  });
+
+  // ⭐ TIME
+  let now = new Date().toLocaleString();
+
+  // hiển thị
+  document.getElementById("result").innerHTML =
+    `🎉 ${name} đúng ${score}/${questions.length}<br>
+     ⏰ ${now}<br>
+     ⚠️ TabSwitch: ${tabSwitchCount || 0}`;
+
+  // ⭐ GỬI DATA FULL
+  fetch("https://script.google.com/macros/s/AKfycbwKGHpjJy1RxNpGRIHdZtQiPfCrh0OSG24DEzQtRB7Ezlr1aki97aZL0JfQiSwkKmYmrg/exec",{
+    method:"POST",
+    body:JSON.stringify({
+      time: now,
+      name: name,
+      score: score,
+      total: questions.length,
+      tabSwitch: tabSwitchCount || 0,
+      wrong: wrongList.map((w,i)=>
+        (i+1)+". "+w.question+
+        " | Bạn chọn: "+w.your+
+        " | Đúng: "+w.correct
+      ).join("\n")
+    })
+  });
+}
+
+</script>
+
+</body>
+</html>
