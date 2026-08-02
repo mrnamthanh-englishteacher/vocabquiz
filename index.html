@@ -84,142 +84,14 @@ button{
 #leaderboard{
   margin-top:10px;
 }
-
-
-/* ===== CHỐNG SAO CHÉP / GIAN LẬN ===== */
-html, body, .container, #quiz, .question, .answers, label {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-}
-
-input, button {
-  -webkit-user-select: auto;
-  user-select: auto;
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-html {
-  touch-action: manipulation;
-}
-
-@media (max-width: 600px) {
-  body { font-size: 17px; }
-  .container {
-    width: auto;
-    margin: 10px;
-    padding: 14px;
-    border-radius: 14px;
-  }
-  h1 { font-size: 23px; line-height: 1.3; }
-  #username {
-    box-sizing: border-box;
-    width: 92%;
-    min-height: 46px;
-    font-size: 17px;
-  }
-  #timer {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255,255,255,.96);
-    padding: 10px;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .question {
-    padding: 14px;
-    font-size: 17px;
-    line-height: 1.45;
-  }
-  .answers label {
-    padding: 9px 5px;
-    margin: 3px 0;
-    line-height: 1.4;
-  }
-  .answers input[type="radio"] {
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-    margin-right: 7px;
-  }
-  button {
-    width: min(90%, 360px);
-    min-height: 50px;
-    font-size: 18px;
-  }
-  .watermark-item { font-size: 15px; }
-}
-
-body.exam-hidden .container {
-  filter: blur(14px);
-  pointer-events: none;
-}
-
-#securityOverlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  background: rgba(15,15,20,.96);
-  color: white;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-body.exam-hidden #securityOverlay {
-  display: flex;
-}
-
-#watermarkLayer {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: .13;
-}
-
-.watermark-item {
-  position: absolute;
-  transform: rotate(-28deg);
-  font-size: 18px;
-  font-weight: bold;
-  color: #111;
-  white-space: nowrap;
-}
-
-@media print {
-  body * { display: none !important; }
-  body::before {
-    content: "Không được phép in nội dung bài kiểm tra.";
-    display: block !important;
-    font-size: 24px;
-    padding: 40px;
-  }
-}
-
 </style>
 </head>
 
 <body oncontextmenu="return false;">
 
-<div id="securityOverlay">⚠️ Nội dung bài kiểm tra đang được bảo vệ.<br><small>Hãy quay lại trang để tiếp tục.</small></div>
-<div id="watermarkLayer"></div>
-
 <div class="container">
 
-<h1>✨ KHẢO BÀI TỪ VỰNG UNIT 2 (YOU'RE COOKED 😈) ✨</h1>
+<h1>✨ KHẢO BÀI TỪ VỰNG TOEIC ✨</h1>
 
 <div class="header">
 <input id="username" placeholder="Nhập tên của bạn...">
@@ -239,169 +111,19 @@ body.exam-hidden #securityOverlay {
 </div>
 
 <script>
-let tabSwitchCount = 0;
-let suspiciousActionCount = 0;
-let examSubmitted = false;
-let hiddenStartedAt = null;
-let lastViolationAlertAt = 0;
-const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-const maxTabSwitches = isMobileDevice ? 5 : 3;
-const minimumHiddenDuration = isMobileDevice ? 3000 : 1200;
-const examCode = Math.random().toString(36).slice(2, 8).toUpperCase();
+let tabSwitchCount = 0; 
 
-function recordSuspiciousAction(action){
-  suspiciousActionCount++;
-  console.warn("Suspicious action:", action);
-}
-
-function securityAlert(message){
-  const now = Date.now();
-  if(now - lastViolationAlertAt < 1200) return;
-  lastViolationAlertAt = now;
-  alert(message);
-}
-
-function updateWatermark(){
-  const name = document.getElementById("username").value.trim() || "CHƯA NHẬP TÊN";
-  const layer = document.getElementById("watermarkLayer");
-  layer.innerHTML = "";
-
-  const text = name + " • MÃ " + examCode + " • " + new Date().toLocaleTimeString();
-  for(let y = -40; y < window.innerHeight + 120; y += 150){
-    for(let x = -100; x < window.innerWidth + 250; x += 320){
-      const item = document.createElement("div");
-      item.className = "watermark-item";
-      item.style.left = x + "px";
-      item.style.top = y + "px";
-      item.textContent = text;
-      layer.appendChild(item);
-    }
-  }
-}
-
-updateWatermark();
-window.addEventListener("resize", updateWatermark);
-document.getElementById("username").addEventListener("input", updateWatermark);
-setInterval(updateWatermark, 1000);
-
-// Chặn chọn, copy, cut, kéo thả và menu chuột phải
-document.addEventListener("copy", function(e){
-  e.preventDefault();
-  recordSuspiciousAction("copy");
-  securityAlert("⚠️ Không được phép sao chép nội dung bài kiểm tra.");
-});
-
-document.addEventListener("cut", function(e){
-  e.preventDefault();
-  recordSuspiciousAction("cut");
-});
-
-document.addEventListener("selectstart", function(e){
-  if(!e.target.closest("input")) e.preventDefault();
-});
-
-document.addEventListener("dragstart", function(e){
-  e.preventDefault();
-});
-
-document.addEventListener("contextmenu", function(e){
-  e.preventDefault();
-  recordSuspiciousAction("contextmenu");
-});
-
-// Chặn các phím tắt phổ biến dùng để sao chép, lưu, in, xem mã nguồn
-window.addEventListener("keydown", function(e){
-  const key = e.key.toLowerCase();
-  const blocked =
-    e.key === "F12" ||
-    e.key === "PrintScreen" ||
-    ((e.ctrlKey || e.metaKey) && ["c","x","a","s","p","u"].includes(key)) ||
-    ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c"].includes(key));
-
-  if(blocked){
-    e.preventDefault();
-    e.stopPropagation();
-    recordSuspiciousAction("keyboard:" + e.key);
-
-    if(e.key === "PrintScreen"){
-      navigator.clipboard?.writeText("").catch(()=>{});
-      securityAlert("⚠️ Hệ thống đã ghi nhận thao tác chụp màn hình.");
-    } else {
-      securityAlert("⚠️ Phím tắt này bị vô hiệu hóa trong lúc làm bài.");
-    }
-  }
-}, true);
-
-window.addEventListener("beforeprint", function(){
-  recordSuspiciousAction("print");
-  securityAlert("⚠️ Không được phép in bài kiểm tra.");
-});
-
-// Làm mờ nội dung khi trang thật sự bị ẩn
-function hideExam(){
-  if(examSubmitted) return;
-  document.body.classList.add("exam-hidden");
-}
-
-function showExam(){
-  document.body.classList.remove("exam-hidden");
-}
-
-// Trên điện thoại, blur có thể xảy ra khi mở bàn phím nên chỉ làm mờ nhẹ,
-// không tính vi phạm nếu document vẫn đang hiển thị.
-window.addEventListener("blur", function(){
-  if(document.hidden) hideExam();
-});
-window.addEventListener("focus", function(){
-  if(!document.hidden) showExam();
-});
-
-// Phát hiện chuyển tab / đổi ứng dụng. Chỉ tính khi bị ẩn đủ lâu,
-// tránh phạt nhầm lúc kéo thanh thông báo hoặc có thông báo hệ thống ngắn.
 document.addEventListener("visibilitychange", function() {
-  if(examSubmitted) return;
-
-  if(document.hidden){
-    hiddenStartedAt = Date.now();
-    hideExam();
-    return;
-  }
-
-  showExam();
-  if(hiddenStartedAt === null) return;
-
-  const hiddenDuration = Date.now() - hiddenStartedAt;
-  hiddenStartedAt = null;
-
-  if(hiddenDuration >= minimumHiddenDuration){
+  if (document.hidden) {
     tabSwitchCount++;
-    recordSuspiciousAction("tab-switch:" + hiddenDuration + "ms");
-    securityAlert(
-      "⚠️ Hệ thống ghi nhận bạn rời bài " + tabSwitchCount + "/" + maxTabSwitches + " lần."
-    );
 
-    if(tabSwitchCount >= maxTabSwitches){
-      securityAlert("❌ Bạn rời bài quá nhiều. Bài sẽ được nộp tự động!");
-      setTimeout(function(){ submitQuiz(true); }, 150);
+    alert("⚠️ Bạn đã rời tab (" + tabSwitchCount + " lần)");
+
+    if(tabSwitchCount >= 3){
+      alert("❌ Bạn rời tab quá nhiều!");
+      submitQuiz();
     }
   }
-});
-
-// Chặn thao tác nhấn giữ để gọi menu sao chép trên điện thoại.
-let longPressTimer = null;
-document.addEventListener("touchstart", function(e){
-  if(e.target.closest("input, button")) return;
-  longPressTimer = setTimeout(function(){
-    recordSuspiciousAction("long-press");
-    securityAlert("⚠️ Không được nhấn giữ để sao chép câu hỏi.");
-  }, 750);
-}, {passive:true});
-
-["touchend", "touchcancel", "touchmove"].forEach(function(eventName){
-  document.addEventListener(eventName, function(){
-    clearTimeout(longPressTimer);
-    longPressTimer = null;
-  }, {passive:true});
 });
 
 // 🔀 random
@@ -411,256 +133,806 @@ function shuffle(arr){
 
 // 📚 DATA
 let originalQuestions = [ 
-{
-  q: "Although Jason studies very hard, he sometimes feels ______ when comparing himself with students who always get higher scores.",
-  a: ["superior", "inferior", "identical", "original"],
-  c: 1
-},
-{
-  q: "Students who spend too much time playing online games are more ______ poor eyesight.",
-  a: ["representative of", "vulnerable to", "respectful of", "appreciative of"],
-  c: 1
-},
-{
-  q: "Some newspapers intentionally ______ the facts in order to attract more readers.",
-  a: ["distort", "undergo", "yield", "identify"],
-  c: 0
-},
-{
-  q: "Parents should encourage their children to build strong ______ by praising their efforts instead of only their achievements.",
-  a: ["identity", "self-esteem", "reflection", "specialty"],
-  c: 1
-},
-{
-  q: "The manager replied to the email ______ the issue you reported yesterday.",
-  a: ["regarding", "despite", "beyond", "throughout"],
-  c: 0
-},
-{
-  q: "The new farming method can ______ more rice while using less water.",
-  a: ["reflect", "yield", "undergo", "customize"],
-  c: 1
-},
-{
-  q: "Every new employee must ______ a two-week training course before starting work.",
-  a: ["gain traction", "undergo", "represent", "distinguish"],
-  c: 1
-},
-{
-  q: "Electric cars have recently ______ because more charging stations have been built.",
-  a: ["taken over", "gained traction", "put down", "reflected"],
-  c: 1
-},
-{
-  q: "This painting is the ______ work created by the artist, not a copy.",
-  a: ["expressive", "original", "identical", "representative"],
-  c: 1
-},
-{
-  q: "Young children often ______ their parents' behavior without realizing it.",
-  a: ["distort", "imitate", "strengthen", "appreciate"],
-  c: 1
-},
-{
-  q: "Many successful athletes hope to ______ Olympic champions rather than simply copy their actions.",
-  a: ["emulate", "customize", "identify", "present"],
-  c: 0
-},
-{
-  q: "The company offered a generous bonus as an ______ for employees to work harder.",
-  a: ["specialty", "incentive", "experience", "reflection"],
-  c: 1
-},
-{
-  q: "Her creativity is what ______ from the other designers in the company.",
-  a: ["results in her", "sets her apart", "results from her", "takes over her"],
-  c: 1
-},
-{
-  q: "Many English words are ______ Latin.",
-  a: ["taking over", "stemming from", "resulting in", "reflecting on"],
-  c: 1
-},
-{
-  q: "The heavy rain ______ serious flooding in several villages.",
-  a: ["resulted from", "resulted in", "took after", "derived from"],
-  c: 1
-},
-{
-  q: "Mr. Nam really ______ Son Tung. They have the same smile and personality.",
-  a: ["takes on", "takes after", "takes over", "takes in"],
-  c: 1
-},
-{
-  q: "Many people find it difficult to ______ fake products from genuine ones.",
-  a: ["undergo", "distinguish", "yield", "represent"],
-  c: 1
-},
-{
-  q: "The hospital plans to ______ twenty new nurses before the end of the year.",
-  a: ["employ", "distort", "undergo", "customize"],
-  c: 0
-},
-{
-  q: "The traffic accident ______ the driver's carelessness on the wet road.",
-  a: ["resulted in", "resulted from", "took over", "yielded"],
-  c: 1
-},
-{
-  q: "People from all over the ______ visit this famous museum every year.",
-  a: ["globe", "scale", "custom", "identity"],
-  c: 0
-},
-{
-  q: "Air pollution has become a serious problem ______, so countries must work together to solve it.",
-  a: ["on special", "on a global scale", "beyond belief", "on reflection"],
-  c: 1
-},
-{
-  q: "The city is famous for its cultural ______, with people from many different ethnic groups living together peacefully.",
-  a: ["reflection", "diversity", "specialty", "popularity"],
-  c: 1
-},
-{
-  q: "National parks help protect ______ by providing a safe habitat for thousands of plant and animal species.",
-  a: ["biodiversity", "belief", "identity", "appreciation"],
-  c: 0
-},
-{
-  q: "The magician's performance was so amazing that it seemed ______.",
-  a: ["on special", "beyond belief", "on reflection", "with regard to"],
-  c: 1
-},
-{
-  q: "His excuse for arriving three hours late sounded so ______ that no one believed him.",
-  a: ["believable", "implausible", "appreciative", "reflective"],
-  c: 1
-},
-{
-  q: "Although the story was fictional, it was so ______ that many readers believed it had really happened.",
-  a: ["believable", "implausible", "expressionless", "inexperienced"],
-  c: 0
-},
-{
-  q: "It is our family ______ to have dinner together every Sunday evening.",
-  a: ["specialty", "custom", "incentive", "identity"],
-  c: 1
-},
-{
-  q: "Customers can ______ the color and design of the shoes before placing an order.",
-  a: ["represent", "customize", "strengthen", "identify"],
-  c: 1
-},
-{
-  q: "It is ______ in Japan to remove your shoes before entering someone's home.",
-  a: ["expressive", "customary", "appreciative", "original"],
-  c: 1
-},
-{
-  q: "Students should always show ______ their teachers and classmates.",
-  a: ["respect for", "appreciation to", "reflection on", "popularity with"],
-  c: 0
-},
-{
-  q: "Although Mr. Green is strict, he is a highly ______ teacher whom both students and parents admire.",
-  a: ["respectful", "respectable", "respective", "representative"],
-  c: 1
-},
-{
-  q: "Please return the completed forms to your ______ department managers before Friday.",
-  a: ["respectful", "respectable", "respective", "reflective"],
-  c: 2
-},
-{
-  q: "Most companies prefer applicants who already have ______ instead of only classroom knowledge.",
-  a: ["hands-on experience", "presentation skills", "self-esteem", "encouragement"],
-  c: 0
-},
-{
-  q: "The company decided to hire an ______ engineer to lead the new project.",
-  a: ["experienced", "inexperienced", "expressive", "identical"],
-  c: 0
-},
-{
-  q: "Good teachers always ______ their students to ask questions and think independently.",
-  a: ["identify", "encourage", "distinguish", "reflect"],
-  c: 1
-},
-{
-  q: "This Korean drama is extremely popular ______ young audiences throughout Asia.",
-  a: ["to", "with", "by", "of"],
-  c: 1
-},
-{
-  q: "These laptops are ______ this weekend, so customers can save up to 30%.",
-  a: ["on reflection", "beyond belief", "on special", "on a global scale"],
-  c: 2
-},
-{
-  q: "Italian food is the restaurant's ______, and many customers come just to try its homemade pasta.",
-  a: ["custom", "specialty", "incentive", "presentation"],
-  c: 1
-},
-{
-  q: "Dr. Brown has ______ environmental science for more than twenty years.",
-  a: ["specialized in", "resulted from", "taken after", "represented"],
-  c: 0
-},
-{
-  q: "This room was ______ decorated for the wedding ceremony.",
-  a: ["especially", "specially", "globally", "respectfully"],
-  c: 1
-},
-{
-  q: "The movie was so ______ that nobody left the cinema until it ended.",
-  a: ["captivating", "respectable", "reflective", "identical"],
-  c: 0
-},
-{
-  q: "The manager will ______ the company's new marketing plan at tomorrow's meeting.",
-  a: ["represent", "present", "reflect", "identify"],
-  c: 1
-},
-{
-  q: "The teacher's ______ in the classroom immediately made the students become quiet.",
-  a: ["absence", "presence", "identity", "reflection"],
-  c: 1
-},
-{
-  q: "Our national flag ______ the history and spirit of the country.",
-  a: ["represents", "presents", "distinguishes", "undergoes"],
-  c: 0
-},
-{
-  q: "When you look into calm water, it can ______ your face like a mirror.",
-  a: ["identify", "reflect", "encourage", "strengthen"],
-  c: 1
-},
-{
-  q: "The businessman became ______ after successfully building several technology companies.",
-  a: ["expressionless", "filthy rich", "appreciative", "believable"],
-  c: 1
-},
-{
-  q: "The museum contains ______ information about Vietnamese history and culture.",
-  a: ["a wealth of", "a reflection of", "a respect for", "an identity of"],
-  c: 0
-},
-{
-  q: "Emma couldn't ______ the two twins because they looked almost identical.",
-  a: ["represent", "differentiate between", "undergo", "specialize in"],
-  c: 1
-},
-{
-  q: "Although he rarely smiles, his face becomes very ______ whenever he talks about his children.",
-  a: ["expressionless", "expressive", "believable", "reflective"],
-  c: 1
-},
-{
-  q: "Professor Wilson is a ______ scientist whose research has received international recognition.",
-  a: ["distinguished", "respectful", "inexperienced", "original"],
-  c: 0
-}
+  {
+    q: "The phrase <b>cut off the electricity</b> means ______.",
+    a: [
+      "lắp đặt hệ thống điện",
+      "cắt điện",
+      "kiểm tra nguồn điện",
+      "sử dụng điện"
+    ],
+    c: 1
+  },
+  {
+    q: "The phrase <b>public amenities</b> means ______.",
+    a: [
+      "tiện ích công cộng",
+      "khu vực dân cư",
+      "văn phòng chính",
+      "dịch vụ tư nhân"
+    ],
+    c: 0
+  },
+  {
+    q: "The phrase <b>spacious office</b> means ______.",
+    a: [
+      "văn phòng tạm thời",
+      "văn phòng bị bỏ trống",
+      "văn phòng rộng rãi",
+      "văn phòng công cộng"
+    ],
+    c: 2
+  },
+  {
+    q: "The phrase <b>be unoccupied</b> means ______.",
+    a: [
+      "đang được sửa chữa",
+      "bị phá dỡ",
+      "đang được sử dụng",
+      "bị bỏ trống"
+    ],
+    c: 3
+  },
+  {
+    q: "The phrase <b>be demolished</b> means ______.",
+    a: [
+      "bị phá dỡ",
+      "được mở rộng",
+      "được cho thuê",
+      "bị bỏ trống"
+    ],
+    c: 0
+  },
+  {
+    q: "The word <b>landlord</b> means ______.",
+    a: [
+      "người thuê nhà",
+      "cư dân",
+      "chủ nhà",
+      "người mua sắm"
+    ],
+    c: 2
+  },
+  {
+    q: "The word <b>tenant</b> means ______.",
+    a: [
+      "người thuê nhà",
+      "chủ nhà",
+      "kỹ thuật viên",
+      "hành khách"
+    ],
+    c: 0
+  },
+  {
+    q: "The phrase <b>hand a paper to someone</b> means ______.",
+    a: [
+      "sắp xếp giấy tờ",
+      "gửi một tài liệu",
+      "đưa tờ giấy cho ai đó",
+      "đọc lướt các trang"
+    ],
+    c: 2
+  },
+  {
+    q: "The phrase <b>view some documents</b> means ______.",
+    a: [
+      "xem một số tài liệu",
+      "phát một số tài liệu",
+      "soạn một hợp đồng",
+      "ghi âm một lời nhắn"
+    ],
+    c: 0
+  },
+  {
+    q: "The phrase <b>read through pages</b> means ______.",
+    a: [
+      "xếp chồng các trang",
+      "đọc lướt các trang",
+      "xé các trang",
+      "phát các trang tài liệu"
+    ],
+    c: 1
+  },
+  {
+    q: "The phrase <b>check information</b> means ______.",
+    a: [
+      "ghi lại thông tin",
+      "gửi thông tin",
+      "kiểm tra thông tin",
+      "xóa thông tin"
+    ],
+    c: 2
+  },
+  {
+    q: "The phrase <b>turn the newspaper</b> means ______.",
+    a: [
+      "đọc tạp chí",
+      "mua tờ báo",
+      "gấp tờ báo",
+      "lật tờ báo"
+    ],
+    c: 3
+  },
+  {
+    q: "The phrase <b>phone someone</b> means ______.",
+    a: [
+      "gọi điện cho ai đó",
+      "ghi âm cho ai đó",
+      "gửi tài liệu cho ai đó",
+      "đưa tờ giấy cho ai đó"
+    ],
+    c: 0
+  },
+  {
+    q: "The phrase <b>make a phone call</b> means ______.",
+    a: [
+      "nghe lại tin nhắn",
+      "gọi điện",
+      "ghi âm lời nhắn",
+      "liên lạc bằng thư"
+    ],
+    c: 1
+  },
+  {
+    q: "The phrase <b>enter the office</b> means ______.",
+    a: [
+      "rời khỏi văn phòng",
+      "chuyển văn phòng",
+      "bước vào văn phòng",
+      "dọn dẹp văn phòng"
+    ],
+    c: 2
+  },
+  {
+    q: "The phrase <b>read from the screen</b> means ______.",
+    a: [
+      "đọc từ màn hình",
+      "chỉ vào màn hình",
+      "sửa màn hình",
+      "tắt màn hình"
+    ],
+    c: 0
+  },
+  {
+    q: "The phrase <b>organize the paper</b> means ______.",
+    a: [
+      "phát giấy tờ",
+      "sắp xếp giấy tờ",
+      "ném giấy tờ",
+      "sao chép giấy tờ"
+    ],
+    c: 1
+  },
+  {
+    q: "The phrase <b>fix the fax machine</b> means ______.",
+    a: [
+      "sử dụng máy fax",
+      "thay thế máy fax",
+      "di chuyển máy fax",
+      "sửa máy fax"
+    ],
+    c: 3
+  },
+  {
+    q: "The phrase <b>distribute the papers</b> means ______.",
+    a: [
+      "thu gom tài liệu",
+      "phát tài liệu",
+      "xem tài liệu",
+      "soạn tài liệu"
+    ],
+    c: 1
+  },
+  {
+    q: "The phrase <b>pull out of the water</b> means ______.",
+    a: [
+      "kéo lên khỏi mặt nước",
+      "nhảy xuống nước",
+      "bơi qua mặt nước",
+      "đổ nước ra ngoài"
+    ],
+    c: 0
+  },
+  {
+    q: "The waiter is expected to ______ as soon as the guests have placed their orders.",
+    a: [
+      "chop vegetables",
+      "serve food",
+      "decide what to eat",
+      "try on a pair of shoes"
+    ],
+    c: 1
+  },
+  {
+    q: "Before adding the carrots to the soup, the cook needs to ______.",
+    a: [
+      "hold documents",
+      "pick up flowers",
+      "chop vegetables",
+      "watch a street performance"
+    ],
+    c: 2
+  },
+  {
+    q: "The customers are looking at the menu because they are trying to ______.",
+    a: [
+      "decide what to eat",
+      "point at a monitor",
+      "read a magazine",
+      "check the hood"
+    ],
+    c: 0
+  },
+  {
+    q: "Knives, pans, and serving spoons are common ______ found in a restaurant kitchen.",
+    a: [
+      "public amenities",
+      "refreshments",
+      "qualifications",
+      "kitchen utensils"
+    ],
+    c: 3
+  },
+  {
+    q: "The customer asked for a different size before she decided to ______.",
+    a: [
+      "wear a scarf",
+      "try on a pair of shoes",
+      "go up the stairs",
+      "sit on a bench"
+    ],
+    c: 1
+  },
+  {
+    q: "The employees are gathered around the table, and one of them appears to ______ while explaining the sales figures.",
+    a: [
+      "lie on the grass",
+      "run on a track",
+      "point at a monitor",
+      "pick up flowers"
+    ],
+    c: 2
+  },
+  {
+    q: "The woman is wearing a business suit and appears to ______ in both hands.",
+    a: [
+      "hold documents",
+      "serve food",
+      "check the hood",
+      "watch a performance"
+    ],
+    c: 0
+  },
+  {
+    q: "Because the sunlight is very bright, the man has chosen to ______.",
+    a: [
+      "wear a scarf",
+      "look at each other",
+      "read from the screen",
+      "wear glasses"
+    ],
+    c: 3
+  },
+  {
+    q: "It is cold outside, so the woman has decided to ______ before leaving the building.",
+    a: [
+      "pick up flowers",
+      "wear a scarf",
+      "look at the screen",
+      "run on a track"
+    ],
+    c: 1
+  },
+  {
+    q: "Several people have stopped near the sidewalk to ______ performed by a group of musicians.",
+    a: [
+      "watch a street performance",
+      "go up the stairs",
+      "read a magazine",
+      "set on the table"
+    ],
+    c: 0
+  },
+  {
+    q: "The mechanic opened the front of the car in order to ______.",
+    a: [
+      "look at each other",
+      "hang on the wall",
+      "check the hood",
+      "stack on the floor"
+    ],
+    c: 2
+  },
+  {
+    q: "While waiting for her appointment, Ms. Lee decided to ______ in the reception area.",
+    a: [
+      "read a magazine",
+      "run on a track",
+      "point at the picture",
+      "pick up flowers"
+    ],
+    c: 0
+  },
+  {
+    q: "Because the elevator is temporarily unavailable, visitors must ______ to reach the second floor.",
+    a: [
+      "sit on a bench",
+      "go up the stairs",
+      "lie on the grass",
+      "look at the screen"
+    ],
+    c: 1
+  },
+  {
+    q: "Several runners are preparing to ______ at the new sports center.",
+    a: [
+      "watch a performance",
+      "look at each other",
+      "run on a track",
+      "hang on the wall"
+    ],
+    c: 2
+  },
+  {
+    q: "After walking through the park for an hour, the elderly couple decided to ______ near the lake.",
+    a: [
+      "pick up flowers",
+      "point at the picture",
+      "sit on a bench",
+      "stack on the floor"
+    ],
+    c: 2
+  },
+  {
+    q: "The two businesspeople appear to ______ while discussing the proposed contract.",
+    a: [
+      "look at each other",
+      "lie on the grass",
+      "read a magazine",
+      "watch a street performance"
+    ],
+    c: 0
+  },
+  {
+    q: "Many families gathered in the theater to ______ by a well-known dance company.",
+    a: [
+      "send a document",
+      "write up a report",
+      "watch a performance",
+      "make a suggestion"
+    ],
+    c: 2
+  },
+  {
+    q: "The tour guide raised her hand to ______ displayed at the front of the gallery.",
+    a: [
+      "set on the table",
+      "point at the picture",
+      "hang on the wall",
+      "look at the screen"
+    ],
+    c: 1
+  },
+  {
+    q: "The framed photographs will ______ in the main hallway of the hotel.",
+    a: [
+      "stack on the floor",
+      "hang on the wall",
+      "set on the table",
+      "pull out of the water"
+    ],
+    c: 1
+  },
+  {
+    q: "The documents have been neatly arranged and ______ beside the conference-room entrance.",
+    a: [
+      "set on the table",
+      "stack on the floor",
+      "pick up flowers",
+      "lie on the grass"
+    ],
+    c: 0
+  },
+  {
+    q: "Please ______ to the department manager before the end of the business day.",
+    a: [
+      "write a contract",
+      "send a document",
+      "come up with an idea",
+      "make a suggestion"
+    ],
+    c: 1
+  },
+  {
+    q: "After completing the inspection, the engineer must ______ describing the cause of the equipment failure.",
+    a: [
+      "write up a report",
+      "meet demand",
+      "purchase",
+      "repeat a message"
+    ],
+    c: 0
+  },
+  {
+    q: "The legal department has been asked to ______ between the company and its new supplier.",
+    a: [
+      "make a suggestion",
+      "hire a consulting firm",
+      "write a contract",
+      "record a message"
+    ],
+    c: 2
+  },
+  {
+    q: "The marketing team needs to ______ for attracting more customers to the new store.",
+    a: [
+      "return a call",
+      "come up with an idea",
+      "reach someone",
+      "take a day off"
+    ],
+    c: 1
+  },
+  {
+    q: "The factory has increased production in order to ______ for its most popular product.",
+    a: [
+      "relocate",
+      "train employees",
+      "meet demand",
+      "accommodate"
+    ],
+    c: 2
+  },
+  {
+    q: "Management decided to ______ to obtain expert advice on the company’s expansion plan.",
+    a: [
+      "hire a consulting firm",
+      "make a phone call",
+      "send a document",
+      "purchase"
+    ],
+    c: 0
+  },
+  {
+    q: "The company plans to promote its new product through a ______ during the evening news.",
+    a: [
+      "application form",
+      "TV commercial",
+      "office hours",
+      "intermission"
+    ],
+    c: 1
+  },
+  {
+    q: "Please send your résumé and completed ______ to the Human Resources department.",
+    a: [
+      "manual",
+      "replacement",
+      "application form",
+      "refreshments"
+    ],
+    c: 2
+  },
+  {
+    q: "The ______ department is responsible for recruitment, staff training, and employee records.",
+    a: [
+      "human resources (HR)",
+      "accommodation",
+      "audience",
+      "utilities"
+    ],
+    c: 0
+  },
+  {
+    q: "The company is looking for a temporary ______ for Ms. Brown while she is on maternity leave.",
+    a: [
+      "patron",
+      "resident",
+      "passenger",
+      "replacement"
+    ],
+    c: 3
+  },
+  {
+    q: "Applicants must have the necessary academic ______ and at least two years of relevant experience.",
+    a: [
+      "qualifications",
+      "refreshments",
+      "utilities",
+      "public amenities"
+    ],
+    c: 0
+  },
+  {
+    q: "Mr. Chen will ______ to the company’s Singapore branch at the beginning of next month.",
+    a: [
+      "take a day off",
+      "transfer",
+      "repeat a message",
+      "return a call"
+    ],
+    c: 1
+  },
+  {
+    q: "Because the current building is too small, the company plans to ______ to a larger office.",
+    a: [
+      "record a message",
+      "set up",
+      "relocate",
+      "purchase"
+    ],
+    c: 2
+  },
+  {
+    q: "The company regularly organizes workshops to ______ in customer service and workplace safety.",
+    a: [
+      "train employees",
+      "reach someone",
+      "accommodate",
+      "make a suggestion"
+    ],
+    c: 0
+  },
+  {
+    q: "After working several weekends in a row, Maya decided to ______ on Friday.",
+    a: [
+      "return a call",
+      "take a day off",
+      "meet demand",
+      "set up"
+    ],
+    c: 1
+  },
+  {
+    q: "Customer service representatives are available during normal ______ from 8:30 a.m. to 5:00 p.m.",
+    a: [
+      "office hours",
+      "after the tone",
+      "intermission",
+      "installation"
+    ],
+    c: 0
+  },
+  {
+    q: "Ms. Rivera is currently in a meeting, but she will ______ as soon as she becomes available.",
+    a: [
+      "repeat a message",
+      "return a call",
+      "record a message",
+      "reach someone"
+    ],
+    c: 1
+  },
+  {
+    q: "To hear the voicemail again, press 1 to ______.",
+    a: [
+      "reach someone",
+      "record a message",
+      "repeat a message",
+      "make a suggestion"
+    ],
+    c: 2
+  },
+  {
+    q: "Please state your name and telephone number ______, and we will contact you shortly.",
+    a: [
+      "on board",
+      "during office hours",
+      "after the tone",
+      "at the intermission"
+    ],
+    c: 2
+  },
+  {
+    q: "I have tried calling Mr. Patel several times, but I have not been able to ______.",
+    a: [
+      "reach someone",
+      "record a message",
+      "return a call",
+      "repeat a message"
+    ],
+    c: 0
+  },
+  {
+    q: "All passengers must remain ______ until the aircraft has reached the terminal.",
+    a: [
+      "on board",
+      "unoccupied",
+      "spacious",
+      "demolished"
+    ],
+    c: 0
+  },
+  {
+    q: "Each ______ must show a valid ticket before entering the train.",
+    a: [
+      "patron",
+      "shopper",
+      "passenger",
+      "resident"
+    ],
+    c: 2
+  },
+  {
+    q: "There will be a fifteen-minute ______ between the first and second acts of the play.",
+    a: [
+      "installation",
+      "intermission",
+      "transfer",
+      "malfunction"
+    ],
+    c: 1
+  },
+  {
+    q: "The restaurant gives regular discounts to every loyal ______ who visits at least twice a month.",
+    a: [
+      "audience",
+      "technician",
+      "patron",
+      "shopper"
+    ],
+    c: 2
+  },
+  {
+    q: "The entire ______ applauded when the performers returned to the stage.",
+    a: [
+      "audience",
+      "performance",
+      "passenger",
+      "resident"
+    ],
+    c: 0
+  },
+  {
+    q: "Complimentary ______, including coffee and sandwiches, will be served after the seminar.",
+    a: [
+      "utilities",
+      "refreshments",
+      "qualifications",
+      "accommodation"
+    ],
+    c: 1
+  },
+  {
+    q: "A ______ asked the sales assistant whether the jacket was available in a larger size.",
+    a: [
+      "technician",
+      "tenant",
+      "shopper",
+      "landlord"
+    ],
+    c: 2
+  },
+  {
+    q: "A trained ______ was called to examine the printer after it stopped working.",
+    a: [
+      "technician",
+      "passenger",
+      "audience",
+      "resident"
+    ],
+    c: 0
+  },
+  {
+    q: "Please consult the instruction ______ before attempting to set up the equipment.",
+    a: [
+      "performance",
+      "purchase",
+      "manual",
+      "replacement"
+    ],
+    c: 2
+  },
+  {
+    q: "The machine’s sudden ______ caused production to stop for nearly three hours.",
+    a: [
+      "installation",
+      "malfunction",
+      "accommodation",
+      "qualification"
+    ],
+    c: 1
+  },
+  {
+    q: "The technician completed the ______ of the new security system yesterday afternoon.",
+    a: [
+      "installation",
+      "purchase",
+      "intermission",
+      "transfer"
+    ],
+    c: 0
+  },
+  {
+    q: "It took the staff less than an hour to ______ the new copy machine.",
+    a: [
+      "cut off the electricity",
+      "set up",
+      "be demolished",
+      "meet demand"
+    ],
+    c: 1
+  },
+  {
+    q: "Employees should report any problems with the ______ to the office technician.",
+    a: [
+      "TV commercial",
+      "copy machine",
+      "application form",
+      "public amenities"
+    ],
+    c: 1
+  },
+  {
+    q: "The conference center can ______ more than 500 guests in its main hall.",
+    a: [
+      "relocate",
+      "accommodate",
+      "transfer",
+      "purchase"
+    ],
+    c: 1
+  },
+  {
+    q: "The company will provide free ______ for employees attending the three-day training course.",
+    a: [
+      "accommodation",
+      "electricity",
+      "qualifications",
+      "replacement"
+    ],
+    c: 0
+  },
+  {
+    q: "Every ______ in the apartment building must follow the recycling regulations.",
+    a: [
+      "shopper",
+      "patron",
+      "resident",
+      "audience"
+    ],
+    c: 2
+  },
+  {
+    q: "Water, gas, and electricity are included in the monthly ______ charge.",
+    a: [
+      "utilities",
+      "refreshments",
+      "performance",
+      "qualifications"
+    ],
+    c: 0
+  },
+  {
+    q: "The storm caused a temporary loss of ______ throughout the neighborhood.",
+    a: [
+      "accommodation",
+      "electricity",
+      "installation",
+      "intermission"
+    ],
+    c: 1
+  },
+  {
+    q: "The company moved into a more ______ building with enough room for all its employees.",
+    a: [
+      "unoccupied",
+      "demolished",
+      "spacious",
+      "manual"
+    ],
+    c: 2
+  },
+  {
+    q: "The museum plans to ______ several new paintings for its permanent collection.",
+    a: [
+      "purchase",
+      "relocate",
+      "accommodate",
+      "train employees"
+    ],
+    c: 0
+  }
 ];
 
 
@@ -709,13 +981,9 @@ let timer=setInterval(()=>{
 },1000);
 
 // submit
-function submitQuiz(forceSubmit = false){
-  if(examSubmitted) return;
+function submitQuiz(){
   let name=document.getElementById("username").value.trim();
-  if(!name){
-    if(forceSubmit){ name = "CHƯA NHẬP TÊN"; }
-    else { alert("Nhập tên!"); return; }
-  }
+  if(!name){alert("Nhập tên!");return;}
 let hasEmpty = false;
 
 // kiểm tra câu chưa làm
@@ -731,27 +999,18 @@ questions.forEach((q,i)=>{
   }
 });
 
-if(hasEmpty && !forceSubmit){
+if(hasEmpty){
   alert("❌ Bạn phải làm hết câu trước khi nộp!");
   return;
 }
   clearInterval(timer);
-  examSubmitted = true;
-  showExam();
 
   let score=0;
   let wrongList=[];
 
   questions.forEach((q,i)=>{
     let selected=document.querySelector(`input[name=q${i}]:checked`);
-    if(!selected){
-      wrongList.push({
-        question:q.q,
-        your:"Chưa chọn đáp án",
-        correct:String.fromCharCode(65+q.c)+". "+q.a[q.c]
-      });
-      return;
-    }
+    if(!selected)return;
 
     let val=parseInt(selected.value);
 
@@ -775,9 +1034,7 @@ if(hasEmpty && !forceSubmit){
 let resultHTML = `
 🎉 <b>${name}</b> đúng <b>${score}/${questions.length}</b><br>
 ⏰ ${now}<br>
-🆔 Mã đề: <b>${examCode}</b><br>
-⚠️ Rời bài: ${tabSwitchCount || 0}/${maxTabSwitches}<br>
-🚨 Hành vi đáng ngờ: ${suspiciousActionCount || 0}<br><br>
+⚠️ TabSwitch: ${tabSwitchCount || 0}<br><br>
 `;
 
 if(wrongRate < 0.3){
@@ -831,9 +1088,6 @@ document.getElementById("result").innerHTML = resultHTML;
       score: score,
       total: questions.length,
       tabSwitch: tabSwitchCount || 0,
-      suspiciousActions: suspiciousActionCount || 0,
-      examCode: examCode,
-      device: isMobileDevice ? "mobile" : "desktop",
       wrong: wrongList.map((w,i)=>
         (i+1)+". "+w.question+
         " | Bạn chọn: "+w.your+
