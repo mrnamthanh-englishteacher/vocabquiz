@@ -91,13 +91,13 @@ button{
 
 <div class="container">
 
-<h1>✨ KHẢO BÀI TỪ VỰNG TOEIC ✨</h1>
+<h1>✨ KHẢO BÀI TỪ VỰNG TOEIC PHẦN 2 ✨</h1>
 
 <div class="header">
 <input id="username" placeholder="Nhập tên của bạn...">
 </div>
 
-<div id="timer">⏳ 15:00</div>
+<div id="timer">⏳ 25:00</div>
 
 <div id="quiz"></div>
 
@@ -132,807 +132,407 @@ function shuffle(arr){
 }
 
 // 📚 DATA
-let originalQuestions = [ 
-  {
-    q: "The phrase <b>cut off the electricity</b> means ______.",
-    a: [
-      "lắp đặt hệ thống điện",
-      "cắt điện",
-      "kiểm tra nguồn điện",
-      "sử dụng điện"
-    ],
-    c: 1
-  },
-  {
-    q: "The phrase <b>public amenities</b> means ______.",
-    a: [
-      "tiện ích công cộng",
-      "khu vực dân cư",
-      "văn phòng chính",
-      "dịch vụ tư nhân"
-    ],
-    c: 0
-  },
-  {
-    q: "The phrase <b>spacious office</b> means ______.",
-    a: [
-      "văn phòng tạm thời",
-      "văn phòng bị bỏ trống",
-      "văn phòng rộng rãi",
-      "văn phòng công cộng"
-    ],
-    c: 2
-  },
-  {
-    q: "The phrase <b>be unoccupied</b> means ______.",
-    a: [
-      "đang được sửa chữa",
-      "bị phá dỡ",
-      "đang được sử dụng",
-      "bị bỏ trống"
-    ],
-    c: 3
-  },
-  {
-    q: "The phrase <b>be demolished</b> means ______.",
-    a: [
-      "bị phá dỡ",
-      "được mở rộng",
-      "được cho thuê",
-      "bị bỏ trống"
-    ],
-    c: 0
-  },
-  {
-    q: "The word <b>landlord</b> means ______.",
-    a: [
-      "người thuê nhà",
-      "cư dân",
-      "chủ nhà",
-      "người mua sắm"
-    ],
-    c: 2
-  },
-  {
-    q: "The word <b>tenant</b> means ______.",
-    a: [
-      "người thuê nhà",
-      "chủ nhà",
-      "kỹ thuật viên",
-      "hành khách"
-    ],
-    c: 0
-  },
-  {
-    q: "The phrase <b>hand a paper to someone</b> means ______.",
-    a: [
-      "sắp xếp giấy tờ",
-      "gửi một tài liệu",
-      "đưa tờ giấy cho ai đó",
-      "đọc lướt các trang"
-    ],
-    c: 2
-  },
-  {
-    q: "The phrase <b>view some documents</b> means ______.",
-    a: [
-      "xem một số tài liệu",
-      "phát một số tài liệu",
-      "soạn một hợp đồng",
-      "ghi âm một lời nhắn"
-    ],
-    c: 0
-  },
-  {
-    q: "The phrase <b>read through pages</b> means ______.",
-    a: [
-      "xếp chồng các trang",
-      "đọc lướt các trang",
-      "xé các trang",
-      "phát các trang tài liệu"
-    ],
-    c: 1
-  },
-  {
-    q: "The phrase <b>check information</b> means ______.",
-    a: [
-      "ghi lại thông tin",
-      "gửi thông tin",
-      "kiểm tra thông tin",
-      "xóa thông tin"
-    ],
-    c: 2
-  },
-  {
-    q: "The phrase <b>turn the newspaper</b> means ______.",
-    a: [
-      "đọc tạp chí",
-      "mua tờ báo",
-      "gấp tờ báo",
-      "lật tờ báo"
-    ],
-    c: 3
-  },
-  {
-    q: "The phrase <b>phone someone</b> means ______.",
-    a: [
-      "gọi điện cho ai đó",
-      "ghi âm cho ai đó",
-      "gửi tài liệu cho ai đó",
-      "đưa tờ giấy cho ai đó"
-    ],
-    c: 0
-  },
-  {
-    q: "The phrase <b>make a phone call</b> means ______.",
-    a: [
-      "nghe lại tin nhắn",
-      "gọi điện",
-      "ghi âm lời nhắn",
-      "liên lạc bằng thư"
-    ],
-    c: 1
-  },
-  {
-    q: "The phrase <b>enter the office</b> means ______.",
-    a: [
-      "rời khỏi văn phòng",
-      "chuyển văn phòng",
-      "bước vào văn phòng",
-      "dọn dẹp văn phòng"
-    ],
-    c: 2
-  },
-  {
-    q: "The phrase <b>read from the screen</b> means ______.",
-    a: [
-      "đọc từ màn hình",
-      "chỉ vào màn hình",
-      "sửa màn hình",
-      "tắt màn hình"
-    ],
-    c: 0
-  },
-  {
-    q: "The phrase <b>organize the paper</b> means ______.",
-    a: [
-      "phát giấy tờ",
-      "sắp xếp giấy tờ",
-      "ném giấy tờ",
-      "sao chép giấy tờ"
-    ],
-    c: 1
-  },
-  {
-    q: "The phrase <b>fix the fax machine</b> means ______.",
-    a: [
-      "sử dụng máy fax",
-      "thay thế máy fax",
-      "di chuyển máy fax",
-      "sửa máy fax"
-    ],
-    c: 3
-  },
-  {
-    q: "The phrase <b>distribute the papers</b> means ______.",
-    a: [
-      "thu gom tài liệu",
-      "phát tài liệu",
-      "xem tài liệu",
-      "soạn tài liệu"
-    ],
-    c: 1
-  },
-  {
-    q: "The phrase <b>pull out of the water</b> means ______.",
-    a: [
-      "kéo lên khỏi mặt nước",
-      "nhảy xuống nước",
-      "bơi qua mặt nước",
-      "đổ nước ra ngoài"
-    ],
-    c: 0
-  },
-  {
-    q: "The waiter is expected to ______ as soon as the guests have placed their orders.",
-    a: [
-      "chop vegetables",
-      "serve food",
-      "decide what to eat",
-      "try on a pair of shoes"
-    ],
-    c: 1
-  },
-  {
-    q: "Before adding the carrots to the soup, the cook needs to ______.",
-    a: [
-      "hold documents",
-      "pick up flowers",
-      "chop vegetables",
-      "watch a street performance"
-    ],
-    c: 2
-  },
-  {
-    q: "The customers are looking at the menu because they are trying to ______.",
-    a: [
-      "decide what to eat",
-      "point at a monitor",
-      "read a magazine",
-      "check the hood"
-    ],
-    c: 0
-  },
-  {
-    q: "Knives, pans, and serving spoons are common ______ found in a restaurant kitchen.",
-    a: [
-      "public amenities",
-      "refreshments",
-      "qualifications",
-      "kitchen utensils"
-    ],
-    c: 3
-  },
-  {
-    q: "The customer asked for a different size before she decided to ______.",
-    a: [
-      "wear a scarf",
-      "try on a pair of shoes",
-      "go up the stairs",
-      "sit on a bench"
-    ],
-    c: 1
-  },
-  {
-    q: "The employees are gathered around the table, and one of them appears to ______ while explaining the sales figures.",
-    a: [
-      "lie on the grass",
-      "run on a track",
-      "point at a monitor",
-      "pick up flowers"
-    ],
-    c: 2
-  },
-  {
-    q: "The woman is wearing a business suit and appears to ______ in both hands.",
-    a: [
-      "hold documents",
-      "serve food",
-      "check the hood",
-      "watch a performance"
-    ],
-    c: 0
-  },
-  {
-    q: "Because the sunlight is very bright, the man has chosen to ______.",
-    a: [
-      "wear a scarf",
-      "look at each other",
-      "read from the screen",
-      "wear glasses"
-    ],
-    c: 3
-  },
-  {
-    q: "It is cold outside, so the woman has decided to ______ before leaving the building.",
-    a: [
-      "pick up flowers",
-      "wear a scarf",
-      "look at the screen",
-      "run on a track"
-    ],
-    c: 1
-  },
-  {
-    q: "Several people have stopped near the sidewalk to ______ performed by a group of musicians.",
-    a: [
-      "watch a street performance",
-      "go up the stairs",
-      "read a magazine",
-      "set on the table"
-    ],
-    c: 0
-  },
-  {
-    q: "The mechanic opened the front of the car in order to ______.",
-    a: [
-      "look at each other",
-      "hang on the wall",
-      "check the hood",
-      "stack on the floor"
-    ],
-    c: 2
-  },
-  {
-    q: "While waiting for her appointment, Ms. Lee decided to ______ in the reception area.",
-    a: [
-      "read a magazine",
-      "run on a track",
-      "point at the picture",
-      "pick up flowers"
-    ],
-    c: 0
-  },
-  {
-    q: "Because the elevator is temporarily unavailable, visitors must ______ to reach the second floor.",
-    a: [
-      "sit on a bench",
-      "go up the stairs",
-      "lie on the grass",
-      "look at the screen"
-    ],
-    c: 1
-  },
-  {
-    q: "Several runners are preparing to ______ at the new sports center.",
-    a: [
-      "watch a performance",
-      "look at each other",
-      "run on a track",
-      "hang on the wall"
-    ],
-    c: 2
-  },
-  {
-    q: "After walking through the park for an hour, the elderly couple decided to ______ near the lake.",
-    a: [
-      "pick up flowers",
-      "point at the picture",
-      "sit on a bench",
-      "stack on the floor"
-    ],
-    c: 2
-  },
-  {
-    q: "The two businesspeople appear to ______ while discussing the proposed contract.",
-    a: [
-      "look at each other",
-      "lie on the grass",
-      "read a magazine",
-      "watch a street performance"
-    ],
-    c: 0
-  },
-  {
-    q: "Many families gathered in the theater to ______ by a well-known dance company.",
-    a: [
-      "send a document",
-      "write up a report",
-      "watch a performance",
-      "make a suggestion"
-    ],
-    c: 2
-  },
-  {
-    q: "The tour guide raised her hand to ______ displayed at the front of the gallery.",
-    a: [
-      "set on the table",
-      "point at the picture",
-      "hang on the wall",
-      "look at the screen"
-    ],
-    c: 1
-  },
-  {
-    q: "The framed photographs will ______ in the main hallway of the hotel.",
-    a: [
-      "stack on the floor",
-      "hang on the wall",
-      "set on the table",
-      "pull out of the water"
-    ],
-    c: 1
-  },
-  {
-    q: "The documents have been neatly arranged and ______ beside the conference-room entrance.",
-    a: [
-      "set on the table",
-      "stack on the floor",
-      "pick up flowers",
-      "lie on the grass"
-    ],
-    c: 0
-  },
-  {
-    q: "Please ______ to the department manager before the end of the business day.",
-    a: [
-      "write a contract",
-      "send a document",
-      "come up with an idea",
-      "make a suggestion"
-    ],
-    c: 1
-  },
-  {
-    q: "After completing the inspection, the engineer must ______ describing the cause of the equipment failure.",
-    a: [
-      "write up a report",
-      "meet demand",
-      "purchase",
-      "repeat a message"
-    ],
-    c: 0
-  },
-  {
-    q: "The legal department has been asked to ______ between the company and its new supplier.",
-    a: [
-      "make a suggestion",
-      "hire a consulting firm",
-      "write a contract",
-      "record a message"
-    ],
-    c: 2
-  },
-  {
-    q: "The marketing team needs to ______ for attracting more customers to the new store.",
-    a: [
-      "return a call",
-      "come up with an idea",
-      "reach someone",
-      "take a day off"
-    ],
-    c: 1
-  },
-  {
-    q: "The factory has increased production in order to ______ for its most popular product.",
-    a: [
-      "relocate",
-      "train employees",
-      "meet demand",
-      "accommodate"
-    ],
-    c: 2
-  },
-  {
-    q: "Management decided to ______ to obtain expert advice on the company’s expansion plan.",
-    a: [
-      "hire a consulting firm",
-      "make a phone call",
-      "send a document",
-      "purchase"
-    ],
-    c: 0
-  },
-  {
-    q: "The company plans to promote its new product through a ______ during the evening news.",
-    a: [
-      "application form",
-      "TV commercial",
-      "office hours",
-      "intermission"
-    ],
-    c: 1
-  },
-  {
-    q: "Please send your résumé and completed ______ to the Human Resources department.",
-    a: [
-      "manual",
-      "replacement",
-      "application form",
-      "refreshments"
-    ],
-    c: 2
-  },
-  {
-    q: "The ______ department is responsible for recruitment, staff training, and employee records.",
-    a: [
-      "human resources (HR)",
-      "accommodation",
-      "audience",
-      "utilities"
-    ],
-    c: 0
-  },
-  {
-    q: "The company is looking for a temporary ______ for Ms. Brown while she is on maternity leave.",
-    a: [
-      "patron",
-      "resident",
-      "passenger",
-      "replacement"
-    ],
-    c: 3
-  },
-  {
-    q: "Applicants must have the necessary academic ______ and at least two years of relevant experience.",
-    a: [
-      "qualifications",
-      "refreshments",
-      "utilities",
-      "public amenities"
-    ],
-    c: 0
-  },
-  {
-    q: "Mr. Chen will ______ to the company’s Singapore branch at the beginning of next month.",
-    a: [
-      "take a day off",
-      "transfer",
-      "repeat a message",
-      "return a call"
-    ],
-    c: 1
-  },
-  {
-    q: "Because the current building is too small, the company plans to ______ to a larger office.",
-    a: [
-      "record a message",
-      "set up",
-      "relocate",
-      "purchase"
-    ],
-    c: 2
-  },
-  {
-    q: "The company regularly organizes workshops to ______ in customer service and workplace safety.",
-    a: [
-      "train employees",
-      "reach someone",
-      "accommodate",
-      "make a suggestion"
-    ],
-    c: 0
-  },
-  {
-    q: "After working several weekends in a row, Maya decided to ______ on Friday.",
-    a: [
-      "return a call",
-      "take a day off",
-      "meet demand",
-      "set up"
-    ],
-    c: 1
-  },
-  {
-    q: "Customer service representatives are available during normal ______ from 8:30 a.m. to 5:00 p.m.",
-    a: [
-      "office hours",
-      "after the tone",
-      "intermission",
-      "installation"
-    ],
-    c: 0
-  },
-  {
-    q: "Ms. Rivera is currently in a meeting, but she will ______ as soon as she becomes available.",
-    a: [
-      "repeat a message",
-      "return a call",
-      "record a message",
-      "reach someone"
-    ],
-    c: 1
-  },
-  {
-    q: "To hear the voicemail again, press 1 to ______.",
-    a: [
-      "reach someone",
-      "record a message",
-      "repeat a message",
-      "make a suggestion"
-    ],
-    c: 2
-  },
-  {
-    q: "Please state your name and telephone number ______, and we will contact you shortly.",
-    a: [
-      "on board",
-      "during office hours",
-      "after the tone",
-      "at the intermission"
-    ],
-    c: 2
-  },
-  {
-    q: "I have tried calling Mr. Patel several times, but I have not been able to ______.",
-    a: [
-      "reach someone",
-      "record a message",
-      "return a call",
-      "repeat a message"
-    ],
-    c: 0
-  },
-  {
-    q: "All passengers must remain ______ until the aircraft has reached the terminal.",
-    a: [
-      "on board",
-      "unoccupied",
-      "spacious",
-      "demolished"
-    ],
-    c: 0
-  },
-  {
-    q: "Each ______ must show a valid ticket before entering the train.",
-    a: [
-      "patron",
-      "shopper",
-      "passenger",
-      "resident"
-    ],
-    c: 2
-  },
-  {
-    q: "There will be a fifteen-minute ______ between the first and second acts of the play.",
-    a: [
-      "installation",
-      "intermission",
-      "transfer",
-      "malfunction"
-    ],
-    c: 1
-  },
-  {
-    q: "The restaurant gives regular discounts to every loyal ______ who visits at least twice a month.",
-    a: [
-      "audience",
-      "technician",
-      "patron",
-      "shopper"
-    ],
-    c: 2
-  },
-  {
-    q: "The entire ______ applauded when the performers returned to the stage.",
-    a: [
-      "audience",
-      "performance",
-      "passenger",
-      "resident"
-    ],
-    c: 0
-  },
-  {
-    q: "Complimentary ______, including coffee and sandwiches, will be served after the seminar.",
-    a: [
-      "utilities",
-      "refreshments",
-      "qualifications",
-      "accommodation"
-    ],
-    c: 1
-  },
-  {
-    q: "A ______ asked the sales assistant whether the jacket was available in a larger size.",
-    a: [
-      "technician",
-      "tenant",
-      "shopper",
-      "landlord"
-    ],
-    c: 2
-  },
-  {
-    q: "A trained ______ was called to examine the printer after it stopped working.",
-    a: [
-      "technician",
-      "passenger",
-      "audience",
-      "resident"
-    ],
-    c: 0
-  },
-  {
-    q: "Please consult the instruction ______ before attempting to set up the equipment.",
-    a: [
-      "performance",
-      "purchase",
-      "manual",
-      "replacement"
-    ],
-    c: 2
-  },
-  {
-    q: "The machine’s sudden ______ caused production to stop for nearly three hours.",
-    a: [
-      "installation",
-      "malfunction",
-      "accommodation",
-      "qualification"
-    ],
-    c: 1
-  },
-  {
-    q: "The technician completed the ______ of the new security system yesterday afternoon.",
-    a: [
-      "installation",
-      "purchase",
-      "intermission",
-      "transfer"
-    ],
-    c: 0
-  },
-  {
-    q: "It took the staff less than an hour to ______ the new copy machine.",
-    a: [
-      "cut off the electricity",
-      "set up",
-      "be demolished",
-      "meet demand"
-    ],
-    c: 1
-  },
-  {
-    q: "Employees should report any problems with the ______ to the office technician.",
-    a: [
-      "TV commercial",
-      "copy machine",
-      "application form",
-      "public amenities"
-    ],
-    c: 1
-  },
-  {
-    q: "The conference center can ______ more than 500 guests in its main hall.",
-    a: [
-      "relocate",
-      "accommodate",
-      "transfer",
-      "purchase"
-    ],
-    c: 1
-  },
-  {
-    q: "The company will provide free ______ for employees attending the three-day training course.",
-    a: [
-      "accommodation",
-      "electricity",
-      "qualifications",
-      "replacement"
-    ],
-    c: 0
-  },
-  {
-    q: "Every ______ in the apartment building must follow the recycling regulations.",
-    a: [
-      "shopper",
-      "patron",
-      "resident",
-      "audience"
-    ],
-    c: 2
-  },
-  {
-    q: "Water, gas, and electricity are included in the monthly ______ charge.",
-    a: [
-      "utilities",
-      "refreshments",
-      "performance",
-      "qualifications"
-    ],
-    c: 0
-  },
-  {
-    q: "The storm caused a temporary loss of ______ throughout the neighborhood.",
-    a: [
-      "accommodation",
-      "electricity",
-      "installation",
-      "intermission"
-    ],
-    c: 1
-  },
-  {
-    q: "The company moved into a more ______ building with enough room for all its employees.",
-    a: [
-      "unoccupied",
-      "demolished",
-      "spacious",
-      "manual"
-    ],
-    c: 2
-  },
-  {
-    q: "The museum plans to ______ several new paintings for its permanent collection.",
-    a: [
-      "purchase",
-      "relocate",
-      "accommodate",
-      "train employees"
-    ],
-    c: 0
-  }
+let originalQuestions = [
+{
+q: "Please confirm your ______ before the package is shipped.",
+a: [
+"shipping address",
+"billing problem",
+"customer service center",
+"career"
+],
+c: 0
+},
+{
+q: "Before turning on the monitor, make sure to ______ the power cable.",
+a: [
+"register",
+"plug in",
+"broadcast",
+"deny facts"
+],
+c: 1
+},
+{
+q: "Our technicians keep extra ______ in stock for computer repairs.",
+a: [
+"office equipment",
+"computer components",
+"hiking clothes",
+"air pollution"
+],
+c: 1
+},
+{
+q: "The manufacturer can provide ______ if your machine is no longer working properly.",
+a: [
+"shipping fees",
+"revised reports",
+"replacement parts",
+"cafeterias"
+],
+c: 2
+},
+{
+q: "Customers requesting a refund must present the ______.",
+a: [
+"original receipt",
+"remaining seat",
+"committee member",
+"career"
+],
+c: 0
+},
+{
+q: "If you notice a ______ on your credit card statement, please contact us immediately.",
+a: [
+"scheduled meeting",
+"billing problem",
+"workshop",
+"application"
+],
+c: 1
+},
+{
+q: "For urgent orders, we recommend choosing ______.",
+a: [
+"trial period",
+"express delivery",
+"maintenance",
+"broadcast"
+],
+c: 1
+},
+{
+q: "Orders over $100 qualify for free ______.",
+a: [
+"shipping fee",
+"maintenance",
+"inventory",
+"career"
+],
+c: 0
+},
+{
+q: "If the product arrives damaged, you may request a full ______.",
+a: [
+"refund",
+"agreement",
+"feature",
+"facility"
+],
+c: 0
+},
+{
+q: "Please contact our ______ if you need additional assistance.",
+a: [
+"customer service center",
+"faculty",
+"committee member",
+"historical place"
+],
+c: 0
+},
+{
+q: "Graduates in software engineering have a ______ in the technology sector.",
+a: [
+"promising future",
+"billing problem",
+"shipping address",
+"cafeteria"
+],
+c: 0
+},
+{
+q: "The manager emailed the ______ to every department yesterday.",
+a: [
+"existing machine",
+"revised document",
+"remaining seat",
+"working-hour system"
+],
+c: 1
+},
+{
+q: "Although the assignment was difficult, everyone enjoyed the ______.",
+a: [
+"challenging task",
+"air pollution",
+"committee member",
+"shipping fee"
+],
+c: 0
+},
+{
+q: "Volunteering overseas was a truly ______ for all participants.",
+a: [
+"rewarding experience",
+"billing problem",
+"computer components",
+"original receipt"
+],
+c: 0
+},
+{
+q: "The hotel receptionist handled the ______ with patience and professionalism.",
+a: [
+"demanding guest",
+"historical place",
+"leading manufacturer",
+"career"
+],
+c: 0
+},
+{
+q: "She received an award for her ______ during the sales competition.",
+a: [
+"shipping address",
+"outstanding performance",
+"replacement parts",
+"trial period"
+],
+c: 1
+},
+{
+q: "The accounting department is trying to collect all ______ before the end of the month.",
+a: [
+"attached files",
+"expected results",
+"outstanding debts",
+"limited times"
+],
+c: 2
+},
+{
+q: "Many graduates dream of working for a ______ in the technology industry.",
+a: [
+"leading company",
+"billing problem",
+"reception",
+"application"
+],
+c: 0
+},
+{
+q: "His ______ to become a pilot motivated him to study every day.",
+a: [
+"overwhelming desire",
+"shipping fee",
+"revised report",
+"quantity"
+],
+c: 0
+},
+{
+q: "The factory decided to upgrade the ______ instead of buying a new one.",
+a: [
+"existing machine",
+"complimentary breakfast",
+"committee member",
+"inventory"
+],
+c: 0
+},
+{
+q: "There is only one ______ available on tomorrow morning's flight.",
+a: [
+"remaining seat",
+"attached file",
+"working-hour system",
+"committee member"
+],
+c: 0
+},
+{
+q: "Renewable energy has become a ______ with excellent career opportunities.",
+a: [
+"historical place",
+"fast-growing industry",
+"billing problem",
+"revised document"
+],
+c: 1
+},
+{
+q: "Please submit a ______ before beginning the construction project.",
+a: [
+"scheduled meeting",
+"detailed plan",
+"refund",
+"quantity"
+],
+c: 1
+},
+{
+q: "This special discount is available for a ______ only.",
+a: [
+"limited time",
+"customer service center",
+"inventory",
+"career"
+],
+c: 0
+},
+{
+q: "Passengers should confirm their ______ at least 24 hours before departure.",
+a: [
+"reserved seat",
+"billing problem",
+"replacement parts",
+"committee member"
+],
+c: 0
+},
+{
+q: "The department heads will attend a ______ at 2:00 this afternoon.",
+a: [
+"revised report",
+"scheduled meeting",
+"trial period",
+"application"
+],
+c: 1
+},
+{
+q: "The finance team submitted the ______ after correcting several errors.",
+a: [
+"revised report",
+"remaining seat",
+"feature",
+"shipping fee"
+],
+c: 0
+},
+{
+q: "Please review the ______ before replying to my email.",
+a: [
+"maintenance",
+"attached file",
+"cafeteria",
+"historical place"
+],
+c: 1
+},
+{
+q: "The company is looking for an ______ to supervise new staff.",
+a: [
+"experienced employee",
+"committee member",
+"broadcast",
+"refund"
+],
+c: 0
+},
+{
+q: "Every ______ is inspected before leaving the factory.",
+a: [
+"finished product",
+"trial period",
+"working-hour system",
+"quantity"
+],
+c: 0
+},
+{
+q: "The marketing campaign achieved the ______ ahead of schedule.",
+a: [
+"billing problem",
+"expected result",
+"shipping address",
+"maintenance"
+],
+c: 1
+},
+{
+q: "Automation has helped the factory achieve a significantly ______.",
+a: [
+"limited time",
+"reduced cost",
+"career",
+"reception"
+],
+c: 1
+},
+{
+q: "The audience was highly ______ with the speaker's presentation.",
+a: [
+"satisfying",
+"satisfied",
+"confusing",
+"boring"
+],
+c: 1
+},
+{
+q: "The instructions were so ______ that many customers asked for help.",
+a: [
+"interested",
+"encouraged",
+"confusing",
+"tired"
+],
+c: 2
+},
+{
+q: "Her success story was extremely ______ to young entrepreneurs.",
+a: [
+"encouraging",
+"disappointed",
+"bored",
+"limited"
+],
+c: 0
+},
+{
+q: "The documentary was so ______ that everyone watched it until the end.",
+a: [
+"excited",
+"interesting",
+"tired",
+"confused"
+],
+c: 1
+},
+{
+q: "The manager looked ______ after working overtime all week.",
+a: [
+"tiring",
+"fascinating",
+"tired",
+"encouraging"
+],
+c: 2
+},
+{
+q: "The tour guide gave a ______ explanation of the ancient temple.",
+a: [
+"historical place",
+"fascinating",
+"working-hour system",
+"application"
+],
+c: 1
+},
+{
+q: "Applicants should ______ online before the closing date.",
+a: [
+"apply for a job",
+"vote anonymously",
+"change a password",
+"visit a store"
+],
+c: 0
+},
+{
+q: "Employees are encouraged to ______ innovative ideas during team discussions.",
+a: [
+"quit one's job",
+"argue for",
+"deny facts",
+"disagree with"
+],
+c: 1
+}
 ];
 
 
